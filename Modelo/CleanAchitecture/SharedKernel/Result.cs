@@ -4,10 +4,6 @@ namespace SharedKernel;
 
 public class Result
 {
-    public bool IsSuccess { get; }
-    public bool IsFailure => !IsSuccess;
-    public Error Error { get; }
-
     public Result(bool isSuccess, Error error)
     {
         if (isSuccess && error != Error.None ||
@@ -15,7 +11,16 @@ public class Result
         {
             throw new ArgumentException("Invalid error", nameof(error));
         }
+
+        IsSuccess = isSuccess;
+        Error = error;
     }
+
+    public bool IsSuccess { get; }
+
+    public bool IsFailure => !IsSuccess;
+
+    public Error Error { get; }
 
     public static Result Success() => new(true, Error.None);
 
@@ -49,3 +54,4 @@ public class Result<TValue> : Result
     public static Result<TValue> ValidationFailure(Error error) =>
         new(default, false, error);
 }
+
